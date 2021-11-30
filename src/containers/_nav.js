@@ -10,8 +10,8 @@ const _nav =  [
   },
   {
     _tag: 'CSidebarNavItem',
-    name: 'Status Pasien',
-    to: '/404',
+    name: 'Status Obat Pasien',
+    to: '/status-pasien',
     icon: <CIcon name="cil-bell" customClasses="c-sidebar-nav-icon"/>,
   },
   {

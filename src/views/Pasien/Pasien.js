@@ -44,7 +44,11 @@ class Pasien extends Component {
           pekerjaan:'',
           jumlahhari:0,
           jumlahobat:0,
-          id:null
+          jumlahPasien:0,
+          jumlahMinumObat:0,
+          id:null,
+          date : new Date(),
+          dateNoww : '',
         };
     }
     toggleCollapse = () => this.setState({collapse : !this.state.collapse})
@@ -53,6 +57,17 @@ class Pasien extends Component {
 
     componentDidMount(){
      this.getPasien()
+     this.getJumlahPasien()
+     this.getJumlahMinumObat()
+     var monthNames = ["January", "February", "March", "April", "May", "June",
+     "July", "August", "September", "October", "November", "December"
+     ];
+      var day = ("0" + this.state.date.getDate()).slice(-2);
+      var month = ("0" + (this.state.date.getMonth())).slice(-2);
+      var dateNow = [ day,monthNames[month],this.state.date.getFullYear()].join(" ")
+      this.setState({
+        dateNoww : dateNow,
+      })
     }
 
     getPasien = async() => {
@@ -60,6 +75,26 @@ class Pasien extends Component {
           await axios.get(`${API_URL}` + 'pasien')
           .then(res => {
             this.setState({data :  res.data.data})
+          })
+      } catch (error) {
+          console.log(error);
+      }
+    }
+    getJumlahPasien = async() => {
+      try {
+          await axios.get(`${API_URL}` + 'pasien/jumlah')
+          .then(res => {
+            this.setState({jumlahPasien :  res.data.data})
+          })
+      } catch (error) {
+          console.log(error);
+      }
+    }
+    getJumlahMinumObat = async() => {
+      try {
+          await axios.get(`${API_URL}` + 'pasien/jumlahminum')
+          .then(res => {
+            this.setState({jumlahMinumObat :  res.data.data})
           })
       } catch (error) {
           console.log(error);
@@ -199,7 +234,6 @@ class Pasien extends Component {
                 <CRow>
                    <CCol xs={12} sm={12}>
                      <CButton color="warning" className="text-white" onClick={() => this.showEdit(row.id, row.nama, row.alamat, row.noktp, row.jeniskelamin, row.status, row.notelppasien, row.notelppmo, row.pekerjaan, row.jumlahhari, row.jumlahobat)}><CIcon name="cil-pencil"/></CButton>
-                     <CButton color="danger" className="text-white ml-2" onClick={() => this.showDelete(row.id, row.nama)}><CIcon name="cil-trash"/></CButton>
                    </CCol>
                 </CRow>
               ),
@@ -216,22 +250,41 @@ class Pasien extends Component {
                   <CRow>
                     <CCol sm="5">
                       <h4 id="traffic" className="card-title mb-0">Puskesmas Baleendah</h4>
-                      <div className="">20 November 2021</div>
+                      <div className="">{this.state.dateNoww}</div>
                     </CCol>
                   </CRow>
                 </CCardBody>
                 <CCardFooter>
                   <CRow className="text-center">
-                  <CCol sm="12" lg="6">
-                    <CCard className="bg-danger">
+                  <CCol xs="12" lg="6" sm="6">
+                    <CCard style={{backgroundColor:'#038283'}}>
                     <CCardBody>
-                      <CRow className="text-center">
-                        <h4 id="traffic" className="card-title mb-0 text-center">Data Sakit</h4>
+                      <CRow className="text-white">
+                        <CCol xs="5">
+                          <CIcon name="cil-disabled" size={'6xl'}/>
+                        </CCol>
+                        <CCol xs="7" className="text-left">
+                          <h4 className="card-title mb-4">Data Sakit</h4>
+                          <h5 className="card-title ">{this.state.jumlahPasien} Pasien</h5>
+                        </CCol>
                       </CRow>
                     </CCardBody>
                     </CCard>
                   </CCol>
-                  <CCol sm="12" lg="6">
+                  <CCol xs="12" lg="6" sm="6">
+                    <CCard style={{backgroundColor:'#038283'}}>
+                      <CCardBody>
+                        <CRow className="text-white">
+                          <CCol xs="5">
+                            <CIcon name="cil-hospital" size={'6xl'}/>
+                          </CCol>
+                          <CCol xs="7" className="text-left">
+                            <h4 className="card-title mb-4">Konfirmasi Minum Obat</h4>
+                            <h5 className="card-title ">{this.state.jumlahMinumObat} / {this.state.jumlahPasien} Pasien</h5>
+                          </CCol>
+                        </CRow>
+                      </CCardBody>
+                    </CCard>
                   </CCol>
                 </CRow>
                 </CCardFooter>

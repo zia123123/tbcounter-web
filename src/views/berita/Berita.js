@@ -71,7 +71,7 @@ class Berita extends Component {
 
     storeBerita = async() =>{
       try {
-        if (this.state.photo !== null && this.state.judul !== null && this.state.deskripsi !== null ) {
+        if (this.state.judul !== null && this.state.deskripsi !== null ) {
             let data = new FormData();
             data.set("judul", this.state.judul);
             data.set("deskripsi", this.state.deskripsi);
@@ -110,11 +110,11 @@ class Berita extends Component {
     }
 
     editBerita = async() => {
-        if (this.state.photo !== null && this.state.judul !== null && this.state.deskripsi !== null ) {
+        if (this.state.judul !== null && this.state.deskripsi !== null ) {
             let data = new FormData();
             data.set("judul", this.state.judul);
             data.set("deskripsi", this.state.deskripsi);
-            data.append("photo", this.state.photo);
+            // data.append("photo", this.state.photo);
 
             await axios({
                 method :"PATCH",
@@ -131,25 +131,6 @@ class Berita extends Component {
             .catch(error => alert(error));
         }else{
             alert("Harap isi semua data")
-        }
-    }
-
-    showDelete = (id, judul) => {
-      this.setState({id : id, judul : judul})
-      this.toggleCollapseDelete()
-    }
-
-    deleteBerita = async() => {
-        try {
-            await axios.patch(`${API_URL}` + "berita/delete/" + this.state.id)
-            .then(res => {
-                alert("Berita dengan judul " + this.state.judul + " berhasil di hapus!")
-                this.toggleCollapseDelete()
-                this.getBerita()
-            })
-        } catch (error) {
-            alert("Something Went Wrong!")
-            console.log(error);
         }
     }
 
@@ -178,7 +159,6 @@ class Berita extends Component {
                 <CRow>
                    <CCol xs={12} sm={12}>
                      <CButton color="warning" className="text-white" onClick={() => this.showEdit(row.id, row.judul, row.deskripsi, row.photo)}><CIcon name="cil-pencil"/></CButton>
-                     <CButton color="danger" className="text-white ml-2" onClick={() => this.showDelete(row.id, row.judul)}><CIcon name="cil-trash"/></CButton>
                    </CCol>
                 </CRow>
               ),
@@ -225,8 +205,8 @@ class Berita extends Component {
                       <CCol xs={12} sm={6} md={6}>
                       <CLabel className="font-weight-bold mt-2">Judul</CLabel>
                       <CInput type="text" placeholder="Masukkan Judul Berita" onChange={e => this.setState({judul : e.target.value})}></CInput>
-                      <CLabel className="font-weight-bold mt-4">Gambar</CLabel>
-                      <CInput type="file" placeholder="Choose Image" onChange={this.onImageChange} accept="image/png, image/gif, image/jpeg" name="photo"></CInput>
+                      {/* <CLabel className="font-weight-bold mt-4">Gambar</CLabel>
+                      <CInput type="file" placeholder="Choose Image" onChange={this.onImageChange} accept="image/png, image/gif, image/jpeg" name="photo"></CInput> */}
                       </CCol>
 
                       <CCol xs={12} sm={6} md={6}>
@@ -235,13 +215,13 @@ class Berita extends Component {
                       </CCol>
                     </CRow>
 
-                    {this.state.getPhoto === null ? '' : 
+                    {/* {this.state.getPhoto === null ? '' : 
                         <CRow className="mt-3">
                             <CCol xs={12} sm={12} md={12}>
                                 <CImg src={this.state.getPhoto} style={{width:'100%', height:'100%'}}></CImg>
                             </CCol>
                         </CRow>
-                    }            
+                    }             */}
                 </ModalBody>
                 <ModalFooter className="border-0">
                     <CButton 
@@ -261,8 +241,8 @@ class Berita extends Component {
                       <CCol xs={12} sm={6} md={6}>
                       <CLabel className="font-weight-bold mt-2">Judul</CLabel>
                       <CInput type="text" placeholder="Masukkan Judul Berita" onChange={e => this.setState({judul : e.target.value})} value={this.state.judul}></CInput>
-                      <CLabel className="font-weight-bold mt-4">Gambar</CLabel>
-                      <CInput type="file" placeholder="Choose Image" onChange={this.onImageChange} accept="image/png, image/gif, image/jpeg" name="photo"></CInput>
+                      {/* <CLabel className="font-weight-bold mt-4">Gambar</CLabel>
+                      <CInput type="file" placeholder="Choose Image" onChange={this.onImageChange} accept="image/png, image/gif, image/jpeg" name="photo"></CInput> */}
                       </CCol>
 
                       <CCol xs={12} sm={6} md={6}>
@@ -284,29 +264,6 @@ class Berita extends Component {
                     onClick= {() => this.editBerita()}
                     className="text-white"
                     >Simpan</CButton>
-                </ModalFooter>
-              </Modal>
-
-              <Modal isOpen={this.state.collapseDelete} toggle={() => this.toggleCollapseDelete()} className="modal-md">
-                <ModalHeader toggle={() => this.toggleCollapseDelete()} style={{backgroundColor:'#038283'}} className="text-white">
-                <CIcon name="cil-trash"/>  Delete Berita 
-                </ModalHeader>
-                <ModalBody>
-                    <CRow>
-                      <CCol xs={12} sm={12} md={12}>
-                        <h6>Apakah anda yakin akan menghapus berita dengan judul {this.state.judul} ?</h6>
-                      </CCol>
-                    </CRow>
-                      
-                                    
-                </ModalBody>
-                <ModalFooter className="border-0">
-                    <CButton 
-                    style={{ width:'100%'}}
-                    color="danger"
-                    onClick= {() => this.deleteBerita()}
-                    className="text-white"
-                    >Delete</CButton>
                 </ModalFooter>
               </Modal>
 
